@@ -29,9 +29,16 @@ def post_detail(request, slug):
     queryset = Post.objects.filter(status=1)
     # this is a shortcut to get data or raise a https404error # same as render being a shortcut to load data to a templ and return it. 
     post = get_object_or_404(queryset, slug=slug)
+    comments = post.comments.all().order_by("-created_on")
+    comment_count = post.comments.filter(approved=True).count()
 
     return render(
         request,
         "blog/post_detail.html",
-        {"post": post, "coder": "Ben Fashan"},
+        {
+            "post": post, 
+            "coder": "Ben Fashan",
+            "comments": comments,
+            "comment_count": comment_count,
+        },
     )
